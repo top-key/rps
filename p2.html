@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>rps</title>
+        <style>
+            body{
+                background-color: rgb(44, 44, 44);
+                color: white;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .title{
+                font-weight: bold;
+                font-size: 25px;
+            }
+            .emoji{
+                width: 60px;
+            }
+            .move-button{
+                border: 3px solid white;
+                background-color: transparent;
+                width: 120px;
+                height: 120px;
+                border-radius: 60px;
+                cursor: pointer;
+            }
+            .res{
+                font-size: 20px;
+                margin-top:20px;
+            }
+            .restart-button{
+                background-color: white;
+                border: none;
+                padding: 10px 50px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .ans{
+                margin-top: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <p class="title">Rock Paper Scissors</p>
+        <button class="move-button" onclick="ym('rock')">
+            <img src="rock-emoji.png" class="emoji">
+        </button>
+        <button class="move-button" onclick="ym('paper')">
+            <img src="paper-emoji.png" class="emoji">
+        </button>
+        <button class="move-button" onclick="ym('scissors')">
+            <img src="scissors-emoji.png" class="emoji">
+        </button>
+        <p class="res"></p>
+        <p class="chs"></p>
+        <p class="ans"></p>
+        <button onclick="cntrestart()" class="restart-button">
+            restart
+        </button>
+        <script>
+            let sres=JSON.parse(localStorage.getItem('sres')) || {
+                    win: 0,
+                    lose: 0,
+                    tie: 0
+                };
+                counterUpdate();
+            function cntrestart(){
+                sres.win =0;
+                sres.lose=0;
+                sres.tie=0;
+                localStorage.removeItem('sres');
+                counterUpdate();
+            }
+            function cm(){
+                let rand=Math.random()*3,ans='';
+                if(rand<1) ans='rock';
+                else if (rand<2) ans='paper';
+                else ans='scissors';
+                return ans;
+            }
+            function ym(pm){
+                let res='';
+                let comMove=cm();
+                if(comMove==pm){
+                    res='tie';
+                    sres.tie++;
+                } 
+                else if(comMove=='rock'&&pm=='paper'||comMove=='paper'&&pm=='scissors'||comMove=='scissors'&&pm=='rock'){
+                    res='win';
+                    sres.win++;
+                }
+                else{ 
+                    res='loose';
+                    sres.lose++;
+                }
+                document.querySelector('.res').innerHTML='You '+ res;
+                document.querySelector('.chs').innerHTML=`you <img src="${pm}-emoji.png" class="emoji"> <img src="${comMove}-emoji.png" class="emoji"> Computer`;
+                counterUpdate();
+                //alert('you ' + res + ', because computer have choosen ' + comMove);
+                localStorage.setItem('sres',JSON.stringify(sres));
+            }
+            function counterUpdate(){
+                document.querySelector('.ans').innerHTML=`wins: ${sres.win}, loses: ${sres.lose}, ties:  ${sres.tie}`;
+            }
+        </script>
+    </body>
+</html>
